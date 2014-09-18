@@ -1,0 +1,24 @@
+--- CMakeLists.txt	2014-04-10 19:44:43.815453464 +0900
++++ CMakeLists.txt	2014-04-10 19:45:06.490786211 +0900
+@@ -44,6 +44,13 @@
+ include_directories(${DB8_INCLUDE_DIRS})
+ webos_add_compiler_flags(ALL ${DB8_CFLAGS_OTHER})
+ 
++if (NOT DEFINED USE_PMLOG OR USE_PMLOG)
++    # -- check for pmLogLib
++    pkg_check_modules(PMLOG REQUIRED PmLogLib>=3)
++    include_directories(${PMLOG_INCLUDE_DIRS})
++    webos_add_compiler_flags(ALL ${PMLOG_CFLAGS_OTHER} -DUSE_PMLOG)
++endif()
++
+ # There is a call to system("initctl ...") in ServiceApp.cpp which is compiled in for
+ # all implementations except WEBOS_TARGET_MACHINE_IMPL_SIMULATOR
+ webos_machine_impl_dep()
+@@ -65,6 +72,7 @@
+                       ${GLIB2_LDFLAGS}
+                       ${OPENSSL_LDFLAGS}
+                       ${LS2_LDFLAGS}
++                      ${PMLOG_LDFLAGS}
+                      )
+ 
+ webos_build_daemon()

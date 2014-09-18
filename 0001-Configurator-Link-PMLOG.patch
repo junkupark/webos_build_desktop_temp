@@ -1,0 +1,24 @@
+--- CMakeLists.txt	2014-04-10 19:33:48.487931899 +0900
++++ CMakeLists.txt	2014-04-10 19:33:37.126253525 +0900
+@@ -48,6 +48,13 @@
+ include_directories(${DB8_INCLUDE_DIRS})
+ webos_add_compiler_flags(ALL ${DB8_CFLAGS_OTHER})
+ 
++if (NOT DEFINED USE_PMLOG OR USE_PMLOG)
++    # -- check for pmLogLib
++    pkg_check_modules(PMLOG REQUIRED PmLogLib>=3)
++    include_directories(${PMLOG_INCLUDE_DIRS})
++    webos_add_compiler_flags(ALL ${PMLOG_CFLAGS_OTHER} -DUSE_PMLOG)
++endif()
++
+ file(GLOB SOURCE_FILES src/*.cpp)
+ add_executable(configurator ${SOURCE_FILES} )
+ 
+@@ -57,6 +64,7 @@
+                    	${GLIB2_LDFLAGS}
+                    	${LUNASERVICE_LDFLAGS}
+                    	${CJSON_LDFLAGS}
++                      ${PMLOG_LDFLAGS}
+                    )
+ 
+ webos_configure_header_files(src)
